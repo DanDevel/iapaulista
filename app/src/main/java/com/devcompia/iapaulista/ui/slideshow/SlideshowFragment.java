@@ -58,7 +58,6 @@ public class SlideshowFragment extends Fragment {
     private static final float MOTION_THRESHOLD = 10000f;
     private long lastUploadTime = 0; // controla intervalo mínimo de envio
 
-
     private Executor analysisExecutor = Executors.newSingleThreadExecutor();
     private Bitmap lastFrame = null;
 
@@ -191,16 +190,13 @@ public class SlideshowFragment extends Fragment {
 
 
 
-
-
-
     private void sendToMongo(JSONObject doc) throws IOException, JSONException {
         URL url = new URL("https://sa-east-1.aws.data.mongodb-api.com/app/data-sdgai/endpoint/data/v1/action/insertOne");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setRequestProperty("Access-Control-Request-Headers", "*");
-        conn.setRequestProperty("api-key", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        conn.setRequestProperty("api-key", "QtJ5Y20twTkStKunxnCcPmo1wTfUbvFMkbTZbj7jcg1siGW0ZwG7ZtGEib0RAx8N");
         conn.setDoOutput(true);
 
         JSONObject payload = new JSONObject();
@@ -277,11 +273,17 @@ public class SlideshowFragment extends Fragment {
             if (l != null && !l.isEmpty()) {
                 currentAddress = l.get(0);
                 tvAddress.setText(currentAddress.getAddressLine(0));
+
+                // Parar atualizações de localização após obter o endereço
+                if (locationManager != null) {
+                    locationManager.removeUpdates(locationListener);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int req, @NonNull String[] perms, @NonNull int[] res) {
